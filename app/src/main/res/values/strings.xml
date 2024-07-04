@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">RecyclerViewCrud</string>
+    <string name="cancel">Cancel</string>
+    <string name="ok">Ok</string>
+    <string name="update">update</string>
+    <string name="delete">Delete</string>
+    <string name="title">Enter Title</string>
+    <string name="description">Enter Description</string>
+</resources>
