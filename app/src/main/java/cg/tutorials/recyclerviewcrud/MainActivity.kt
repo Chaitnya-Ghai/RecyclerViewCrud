@@ -13,10 +13,10 @@ import cg.tutorials.recyclerviewcrud.databinding.ActivityMainBinding
 import cg.tutorials.recyclerviewcrud.databinding.CustomDialogBinding
 
 class MainActivity : AppCompatActivity(),RecyclerInterface {
-    lateinit var binding: ActivityMainBinding
-    var array = arrayListOf<Info>()
-    lateinit var linearLayoutManager: LinearLayoutManager
-    var recyclerAdapter= RecyclerAdapter(this,array,this)
+    private lateinit var binding: ActivityMainBinding
+    private var array = arrayListOf<Info>()
+    private lateinit var linearLayoutManager: LinearLayoutManager
+    private var recyclerAdapter= RecyclerAdapter(this,array,this)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -79,7 +79,7 @@ class MainActivity : AppCompatActivity(),RecyclerInterface {
         }
     }
 
-    override fun update(position: Int,oldTitle:String,oldDesp:String) {
+    override fun update(position: Int, oldTitile:String, oldDesp:String) {
 
         val dialogBinding =CustomDialogBinding.inflate(layoutInflater)
         val dialog = Dialog(this).apply {
@@ -93,8 +93,8 @@ class MainActivity : AppCompatActivity(),RecyclerInterface {
         }
         val update = "Update"
         dialogBinding.okBtn.text =update
-        dialogBinding.edName.setText(oldTitle)
-        dialogBinding.edDescription.setText("")
+        dialogBinding.edName.setText(oldTitile)
+        dialogBinding.edDescription.setText(oldDesp)
         dialogBinding.okBtn.setOnClickListener {
             if (dialogBinding.edName.text.toString().isNullOrBlank()){
                 dialogBinding.edName.error="enter a title"
