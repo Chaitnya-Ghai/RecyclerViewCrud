@@ -12,9 +12,10 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import cg.tutorials.recyclerviewcrud.databinding.ActivityMainBinding
 import cg.tutorials.recyclerviewcrud.databinding.CustomDialogBinding
 
-class MainActivity : AppCompatActivity(),RecyclerInterface {
+class MainActivity : AppCompatActivity(),RecyclerInterface{
     private lateinit var binding: ActivityMainBinding
     private var array = arrayListOf<Info>()
+    private lateinit var todoDatabase: TodoDatabase
     private lateinit var linearLayoutManager: LinearLayoutManager
     private var recyclerAdapter= RecyclerAdapter(this,array,this)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -27,6 +28,9 @@ class MainActivity : AppCompatActivity(),RecyclerInterface {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+//
+        todoDatabase = TodoDatabase.getInstance(this)
+//
         binding.fab.setOnClickListener {
             val dialogBinding =CustomDialogBinding.inflate(layoutInflater)
             val dialog = Dialog(this).apply {
@@ -43,26 +47,28 @@ class MainActivity : AppCompatActivity(),RecyclerInterface {
                     dialogBinding.edName.error="enter a title"
                 }
                 if (dialogBinding.edDescription.text.toString().isNullOrBlank()){
-                    dialogBinding.edDescription.error="enter Descriprtion"
+                    dialogBinding.edDescription.error="enter Description"
                 }
                 else{
-                    array.add(Info(
-                        dialogBinding.edName.text.toString(),
-                        dialogBinding.edDescription.text.toString()
-                    ))
+                    val info = Info(title =dialogBinding.edName.text.toString(),
+                        description = dialogBinding.edDescription.text.toString())
+                    todoDatabase.todoInterface().insertTodo(info)
                     recyclerAdapter.notifyDataSetChanged()
                     dialog.dismiss()
+                    getData()
                 }
             }
             dialogBinding.cancelBtn.setOnClickListener {
                 dialog.dismiss()
             }
         }
+
         linearLayoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
         binding.recyclerView.layoutManager = linearLayoutManager
         binding.recyclerView.adapter = recyclerAdapter
-    }
 
+        getData()
+    }
     override fun delete(position: Int) {
         AlertDialog.Builder(this@MainActivity).apply {
             setTitle("DELETE")
@@ -72,6 +78,7 @@ class MainActivity : AppCompatActivity(),RecyclerInterface {
                 setCancelable(true)
             }
             setNegativeButton("Yes") { _, _ ->
+                todoDatabase.todoInterface().deleteTodo(array[position])
                 array.removeAt(position)
                 recyclerAdapter.notifyDataSetChanged()
             }
@@ -96,23 +103,34 @@ class MainActivity : AppCompatActivity(),RecyclerInterface {
         dialogBinding.edName.setText(oldTitile)
         dialogBinding.edDescription.setText(oldDesp)
         dialogBinding.okBtn.setOnClickListener {
-            if (dialogBinding.edName.text.toString().isNullOrBlank()){
+            val newName =dialogBinding.edName.text.toString()
+            val newDes = dialogBinding.edDescription.text.toString()
+            if (newName.isBlank()){
                 dialogBinding.edName.error="enter a title"
             }
-            if (dialogBinding.edDescription.text.toString().isNullOrBlank()) {
+            if (newDes.isBlank()) {
                 dialogBinding.edDescription.error="Enter description"
             }
             else{
-                array[position]=Info(
-                    dialogBinding.edName.text.toString(),
-                    dialogBinding.edDescription.text.toString()
+                val newInfo= Info(
+                    id = array[position].id,
+                    title =  dialogBinding.edName.text.toString(),
+                    description = dialogBinding.edDescription.text.toString()
                 )
-                recyclerAdapter.notifyDataSetChanged()
+                todoDatabase.todoInterface().updateTodo(newInfo)
+                array[position]=newInfo
+                recyclerAdapter.notifyItemChanged(position)
                 dialog.dismiss()
+                getData()
             }
         }
         dialogBinding.cancelBtn.setOnClickListener {
             dialog.dismiss()
         }
+    }
+    private fun getData(){
+        array.clear()
+        array.addAll(todoDatabase.todoInterface().getList())
+        recyclerAdapter.notifyDataSetChanged()
     }
 }
