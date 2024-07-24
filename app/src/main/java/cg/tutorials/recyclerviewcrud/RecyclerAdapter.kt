@@ -24,7 +24,6 @@ class RecyclerAdapter(context: Context,var infoList:ArrayList<Info>,var recycler
     override fun getItemCount(): Int {
         return infoList.size
     }
-
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.tvName.text=infoList[position].title
         holder.tvDescription.text=infoList[position].description
@@ -35,5 +34,9 @@ class RecyclerAdapter(context: Context,var infoList:ArrayList<Info>,var recycler
             recyclerInterface.delete(position)
         }
 
+    }
+    fun addValue(addValue:ArrayList<Info>){
+        infoList=addValue
+        notifyDataSetChanged()
     }
 }

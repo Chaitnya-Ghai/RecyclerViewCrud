@@ -14,17 +14,15 @@
     android:id="@+id/h_gd_85"/>
     <androidx.recyclerview.widget.RecyclerView
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:text="Hello World!"
+        android:layout_height="wrap_content"
         android:id="@+id/recyclerView"
-        app:layout_constraintBottom_toTopOf="@+id/h_gd_85"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/fab"
-        app:layout_constraintTop_toBottomOf="@+id/recyclerView"
+        app:layout_constraintTop_toBottomOf="@+id/h_gd_85"
         app:layout_constraintBottom_toBottomOf="@+id/main"
         android:layout_margin="25dp"
         app:layout_constraintEnd_toEndOf="@id/main"/>

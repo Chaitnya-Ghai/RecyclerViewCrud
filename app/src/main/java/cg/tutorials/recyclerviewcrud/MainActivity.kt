@@ -28,6 +28,9 @@ class MainActivity : AppCompatActivity(),RecyclerInterface{
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+        linearLayoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
+        binding.recyclerView.layoutManager = linearLayoutManager
+        binding.recyclerView.adapter = recyclerAdapter
 //
         todoDatabase = TodoDatabase.getInstance(this)
 //
@@ -50,6 +53,7 @@ class MainActivity : AppCompatActivity(),RecyclerInterface{
                     dialogBinding.edDescription.error="enter Description"
                 }
                 else{
+                    recyclerAdapter.addValue(array)
                     val info = Info(title =dialogBinding.edName.text.toString(),
                         description = dialogBinding.edDescription.text.toString())
                     todoDatabase.todoInterface().insertTodo(info)
@@ -62,11 +66,6 @@ class MainActivity : AppCompatActivity(),RecyclerInterface{
                 dialog.dismiss()
             }
         }
-
-        linearLayoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
-        binding.recyclerView.layoutManager = linearLayoutManager
-        binding.recyclerView.adapter = recyclerAdapter
-
         getData()
     }
     override fun delete(position: Int) {
